@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FELICITY RUDRAxGARG EMS Login</title>
+<style>
+/* Body style */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login box */
+.box {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 360px;
+    margin-bottom: 20px;
+}
+
+/* Company header */
+.company-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.company-header img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.company-header h2 {
+    color: #1e3c72;
+    font-size: 22px;
+    text-shadow: 1px 1px 2px #ccc;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    border-color: #1e3c72;
+    box-shadow: 0 0 8px rgba(30,60,114,0.3);
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1e3c72;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #3a5fbd;
+    transform: scale(1.05);
+}
+
+/* Info paragraph */
+p {
+    margin-top: 20px;
+    color: #555;
+    font-size: 14px;
+}
+
+/* AI Button */
+.ai-btn{
+    display:inline-block;
+    padding:14px 25px;
+    background:#1e3c72;
+    color:white;
+    text-decoration:none;
+    border-radius:30px;
+    font-weight:bold;
+    box-shadow:0 0 15px rgba(0,0,0,0.3);
+    transition:0.3s;
+    margin-top:10px;
+}
+
+.ai-btn:hover{
+    background:#3a5fbd;
+    transform:scale(1.05);
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <!-- Company Logo & Name -->
+  <div class="company-header">
+    <img src="logo.png" alt="FELICITY RUDRAxGARG">
+    <h2>FELICITY RUDRAxGARG</h2>
+  </div>
+
+  <!-- Login Inputs -->
+  <input id="user" placeholder="ID">
+  <input id="pass" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- AI Assistant Button -->
+<a href="assistant.html" class="ai-btn">
+🤖 Open Company AI Assistant
+</a>
+
+<script>
+function login(){
+ let u = user.value;
+ let p = pass.value;
+
+ if(u=="ANAND" && p=="123"){
+   localStorage.setItem("role","owner");
+   location="owner.html";
+ }
+ else if(u=="emp" && p=="123"){
+   localStorage.setItem("role","emp");
+   location="employee.html";
+ }
+ else{
+   alert("Wrong login");
+ }
+}
+</script>
+
+</body>
+</html>

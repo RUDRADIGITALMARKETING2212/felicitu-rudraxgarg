@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FELICITY RUDRAxGARG AI Assistant</title>
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.ai-box{
+    width:450px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 0 25px rgba(0,0,0,0.4);
+    padding:20px;
+}
+
+.company{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.company h2{
+    color:#1e3c72;
+    margin:5px 0;
+}
+
+#chat{
+    height:300px;
+    overflow-y:auto;
+    background:#f3f3f3;
+    border-radius:12px;
+    padding:10px;
+}
+
+.user{ text-align:right; margin:6px 0; }
+.user span{ background:#1e3c72; color:white; padding:8px 12px; border-radius:15px; display:inline-block; }
+
+.bot{ text-align:left; margin:6px 0; }
+.bot span{ background:#ddd; padding:8px 12px; border-radius:15px; display:inline-block; }
+
+.questions{
+    display:flex;
+    flex-wrap:wrap;
+    margin-top:10px;
+    justify-content:center;
+}
+
+.questions button{
+    margin:5px;
+    padding:8px 12px;
+    border:none;
+    border-radius:10px;
+    background:#1e3c72;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.questions button:hover{
+    background:#3a5fbd;
+    transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+<div class="ai-box">
+
+<div class="company">
+<h2>🤖 FELICITY RUDRAxGARG AI</h2>
+<p>Official Company Assistant</p>
+</div>
+
+<div id="chat">
+<div class="bot"><span>Hello! I am the official AI assistant. Choose a question below to get answers.</span></div>
+</div>
+
+<div class="questions">
+<button onclick="ask('company name')">Company Name</button>
+<button onclick="ask('c.e.o')">Owner</button>
+<button onclick="ask('manager')">Manager</button>
+<button onclick="ask('salary')">Salary</button>
+<button onclick="ask('attendance')">Attendance</button>
+<button onclick="ask('leave')">Leave</button>
+<button onclick="ask('work')">Work Submission</button>
+<button onclick="ask('timing')">Working Hours</button>
+<button onclick="ask('payment')">Payment</button>
+<button onclick="ask('experience letter')">Experience Letter</button>
+<button onclick="ask('holiday')">Holiday</button>
+<button onclick="ask('policy')">Company Policy</button>
+<button onclick="ask('illegal')">Is Company Illegal?</button>
+</div>
+
+<script>
+function ask(q){
+    const chat = document.getElementById("chat");
+
+    chat.innerHTML += `<div class="user"><span>${q}</span></div>`;
+
+    let reply="Please contact management for more details.";
+
+    q = q.toLowerCase();
+
+    if(q.includes("company name"))
+        reply = "The company name is FELICITY RUDRAxGARG.";
+    else if(q.includes("c.e.o"))
+        reply = "The owner is Mr. Anand Shukla.";
+    else if(q.includes("manager"))
+        reply = "The manager is Mr. Anand Singh.";
+    else if(q.includes("illegal"))
+        reply = "FELICITY RUDRAxGARG is completely legal and professionally managed by Anand Shukla and Anand singh.";
+    else if(q.includes("salary"))
+        reply = "Salary is based on attendance and work performance.";
+    else if(q.includes("attendance"))
+        reply = "Attendance must be marked daily in the employee dashboard.";
+    else if(q.includes("leave"))
+        reply = "Leave requests should be submitted to the manager before taking leave.";
+    else if(q.includes("work"))
+        reply = "Submit daily work updates in the performance section.";
+    else if(q.includes("timing"))
+        reply = "Company working hours are decided by management.";
+    else if(q.includes("payment"))
+        reply = "Payments are processed after attendance and work verification.";
+    else if(q.includes("experience letter"))
+        reply = "Experience letters are provided after proper work completion.";
+    else if(q.includes("holiday"))
+        reply = "Holidays depend on company schedule and workload.";
+    else if(q.includes("policy"))
+        reply = "Company policies are designed for discipline, growth and professionalism.";
+
+    setTimeout(()=>{
+        chat.innerHTML += `<div class="bot"><span>${reply}</span></div>`;
+        chat.scrollTop = chat.scrollHeight;
+    },600);
+}
+</script>
+
+</body>
+</html>

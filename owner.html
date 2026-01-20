@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Owner Panel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Owner Dashboard</h2>
+
+<div class="section">
+  <h3>Add Employee</h3>
+  <input id="empId" placeholder="Employee ID">
+  <input id="empName" placeholder="Employee Name">
+  <input id="empPhoto" type="file">  <!-- Photo upload -->
+  <input id="empSalary" type="number" placeholder="Per day salary">
+  <button onclick="addEmployee()">Add Employee</button>
+</div>
+
+<div class="section">
+  <h3>Employees List</h3>
+  <div id="empList"></div>
+</div>
+
+<script>
+let employees = JSON.parse(localStorage.getItem("employees") || "[]");
+
+// Add new employee
+function addEmployee(){
+  let id = empId.value.trim();
+  let name = empName.value.trim();
+  let photoFile = empPhoto.files[0];
+  let salary = parseFloat(empSalary.value);
+
+  if(!id || !name || !photoFile || isNaN(salary)){
+    alert("Please fill all fields and select a photo");
+    return;
+  }
+
+  let reader = new FileReader();
+  reader.onload = function(e){
+    let photoData = e.target.result; // Base64 string
+    employees.push({id, name, photo: photoData, salary});
+    localStorage.setItem("employees", JSON.stringify(employees));
+
+    // Clear inputs
+    empId.value = "";
+    empName.value = "";
+    empPhoto.value = "";
+    empSalary.value = "";
+
+    showEmployees();
+  }
+  reader.readAsDataURL(photoFile);
+}
+
+// Show employee list
+function showEmployees(){
+  empList.innerHTML = employees.map(e =>
+    `<div style="border:1px solid white; margin:5px; padding:5px; display:flex; align-items:center;">
+       <img src="${e.photo}" width="50" height="50" style="margin-right:10px;"> 
+       <div>
+         <b>${e.name}</b> (ID: ${e.id}) <br> ₹${e.salary}/day
+       </div>
+     </div>`).join("");
+}
+
+// Initial display
+showEmployees();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Employee Panel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Employee Dashboard</h2>
+
+<div id="empInfo"></div>
+
+<div class="section">
+  <h3>Attendance</h3>
+  <button onclick="markAttendance()">Mark Attendance</button>
+  <div id="attList"></div>
+</div>
+
+<div class="section">
+  <h3>Performance</h3>
+  <textarea id="work" placeholder="Today work"></textarea>
+  <button onclick="submitWork()">Submit Work</button>
+  <div id="perfList"></div>
+</div>
+
+<div class="section">
+  <h3>Salary</h3>
+  <button onclick="calculateSalary()">Calculate Salary</button>
+  <p id="salary"></p>
+</div>
+
+<script>
+let employees = JSON.parse(localStorage.getItem("employees") || "[]");
+
+// Simulate login (for demo, normally we use login form)
+let empId = prompt("Enter Employee ID");
+let employee = employees.find(e=>e.id===empId);
+if(!employee){ alert("Employee not found"); location="index.html"; }
+
+empInfo.innerHTML = `<img src="${employee.photo}" width="80" height="80">
+                     <h3>${employee.name}</h3>
+                     <p>ID: ${employee.id}</p>
+                     <p>Per Day Salary: ₹${employee.salary}</p>`;
+
+let attendance = JSON.parse(localStorage.getItem(`attendance_${employee.id}`) || "[]");
+let performance = JSON.parse(localStorage.getItem(`performance_${employee.id}`) || "[]");
+
+function markAttendance(){
+  let today = new Date().toLocaleDateString();
+  attendance.push({date: today, status:"Present"});
+  localStorage.setItem(`attendance_${employee.id}`, JSON.stringify(attendance));
+  showAttendance();
+  alert("Attendance marked");
+}
+
+function showAttendance(){
+  attList.innerHTML = attendance.map(a=>a.date+" - "+a.status).join("<br>");
+}
+showAttendance();
+
+function submitWork(){
+  let today = new Date().toLocaleDateString();
+  let workText = work.value.trim();
+  if(workText===""){ alert("Enter work"); return; }
+  performance.push({date:today, work:workText});
+  localStorage.setItem(`performance_${employee.id}`, JSON.stringify(performance));
+  work.value="";
+  showPerformance();
+  alert("Work submitted");
+}
+
+function showPerformance(){
+  perfList.innerHTML = performance.map(p=>p.date+" - "+p.work).join("<br>");
+}
+showPerformance();
+
+function calculateSalary(){
+  let totalDays = attendance.length;
+  let totalSalary = totalDays * employee.salary;
+  salary.innerHTML = `Total Days: ${totalDays} <br> Salary = ₹${totalSalary}`;
+}
+</script>
+
+</body>
+</html>

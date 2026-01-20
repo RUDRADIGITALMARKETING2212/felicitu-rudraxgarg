@@ -30,54 +30,85 @@
 </div>
 
 <script>
-let employees = JSON.parse(localStorage.getItem("employees") || "[]");
+// ✅ DOM
+let empInfo = document.getElementById("empInfo");
+let attList = document.getElementById("attList");
+let perfList = document.getElementById("perfList");
+let work = document.getElementById("work");
+let salary = document.getElementById("salary");
 
-// Simulate login (for demo, normally we use login form)
-let empId = prompt("Enter Employee ID");
-let employee = employees.find(e=>e.id===empId);
-if(!employee){ alert("Employee not found"); location="index.html"; }
+// ✅ Demo employee (FIRST TIME ONLY)
+if(!localStorage.getItem("employees")){
+  localStorage.setItem("employees", JSON.stringify([
+    {
+      id:"101",
+      name:"Rahul Kumar",
+      salary:500,
+      photo:"https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+    }
+  ]));
+}
 
-empInfo.innerHTML = `<img src="${employee.photo}" width="80" height="80">
-                     <h3>${employee.name}</h3>
-                     <p>ID: ${employee.id}</p>
-                     <p>Per Day Salary: ₹${employee.salary}</p>`;
+// ✅ Load employees
+let employees = JSON.parse(localStorage.getItem("employees"));
 
-let attendance = JSON.parse(localStorage.getItem(`attendance_${employee.id}`) || "[]");
-let performance = JSON.parse(localStorage.getItem(`performance_${employee.id}`) || "[]");
+// ✅ Login simulation
+let empId = prompt("Enter Employee ID (101)");
+let employee = employees.find(e => e.id === empId);
+
+if(!employee){
+  alert("Employee not found");
+  location.href = "index.html";
+}
+
+// ✅ Show info
+empInfo.innerHTML = `
+  <img src="${employee.photo}" width="80"><br>
+  <h3>${employee.name}</h3>
+  <p>ID: ${employee.id}</p>
+  <p>Per Day Salary: ₹${employee.salary}</p>
+`;
+
+// ✅ Attendance
+let attendance = JSON.parse(localStorage.getItem("attendance_"+employee.id) || "[]");
+let performance = JSON.parse(localStorage.getItem("performance_"+employee.id) || "[]");
 
 function markAttendance(){
   let today = new Date().toLocaleDateString();
-  attendance.push({date: today, status:"Present"});
-  localStorage.setItem(`attendance_${employee.id}`, JSON.stringify(attendance));
+  attendance.push({date:today,status:"Present"});
+  localStorage.setItem("attendance_"+employee.id, JSON.stringify(attendance));
   showAttendance();
-  alert("Attendance marked");
 }
 
 function showAttendance(){
-  attList.innerHTML = attendance.map(a=>a.date+" - "+a.status).join("<br>");
+  attList.innerHTML = attendance.map(a=>`${a.date} - ${a.status}`).join("<br>");
 }
 showAttendance();
 
+// ✅ Performance
 function submitWork(){
-  let today = new Date().toLocaleDateString();
-  let workText = work.value.trim();
-  if(workText===""){ alert("Enter work"); return; }
-  performance.push({date:today, work:workText});
-  localStorage.setItem(`performance_${employee.id}`, JSON.stringify(performance));
+  if(work.value.trim()===""){
+    alert("Enter work details");
+    return;
+  }
+  performance.push({
+    date:new Date().toLocaleDateString(),
+    work:work.value
+  });
+  localStorage.setItem("performance_"+employee.id, JSON.stringify(performance));
   work.value="";
   showPerformance();
-  alert("Work submitted");
 }
 
 function showPerformance(){
-  perfList.innerHTML = performance.map(p=>p.date+" - "+p.work).join("<br>");
+  perfList.innerHTML = performance.map(p=>`${p.date} - ${p.work}`).join("<br>");
 }
 showPerformance();
 
+// ✅ Salary
 function calculateSalary(){
-  let totalDays = attendance.length;
-  let totalSalary = totalDays * employee.salary;
-  salary.innerHTML = `Total Days: ${totalDays} <br> Salary = ₹${totalSalary}`;
+  let total = attendance.length * employee.salary;
+  salary.innerHTML = `Total Days: ${attendance.length}<br>Total Salary: ₹${total}`;
 }
 </script>
 

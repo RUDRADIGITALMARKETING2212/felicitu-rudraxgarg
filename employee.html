@@ -1,8 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Employee Panel</title>
-<link rel="stylesheet" href="style.css">
+  <title>Employee Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h2 { color: #333; }
+    #empInfo {
+      text-align: center;
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 15px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .section {
+      background: #fff;
+      padding: 15px 20px;
+      margin: 10px 0;
+      width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    button:hover { background-color: #45a049; }
+    textarea {
+      width: 100%;
+      height: 60px;
+      padding: 5px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #salary {
+      font-weight: bold;
+      color: #333;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -18,7 +80,7 @@
 
 <div class="section">
   <h3>Performance</h3>
-  <textarea id="work" placeholder="Today work"></textarea>
+  <textarea id="work" placeholder="Enter today's work"></textarea>
   <button onclick="submitWork()">Submit Work</button>
   <div id="perfList"></div>
 </div>
@@ -30,86 +92,105 @@
 </div>
 
 <script>
-// ✅ DOM
-let empInfo = document.getElementById("empInfo");
-let attList = document.getElementById("attList");
-let perfList = document.getElementById("perfList");
-let work = document.getElementById("work");
-let salary = document.getElementById("salary");
+  // ✅ DOM
+  let empInfo = document.getElementById("empInfo");
+  let attList = document.getElementById("attList");
+  let perfList = document.getElementById("perfList");
+  let work = document.getElementById("work");
+  let salary = document.getElementById("salary");
 
-// ✅ Demo employee (FIRST TIME ONLY)
-if(!localStorage.getItem("employees")){
-  localStorage.setItem("employees", JSON.stringify([
-    {
-      id:"101",
-      name:"Rahul Kumar",
-      salary:500,
-      photo:"https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-    }
-  ]));
-}
-
-// ✅ Load employees
-let employees = JSON.parse(localStorage.getItem("employees"));
-
-// ✅ Login simulation
-let empId = prompt("Enter Employee ID (101)");
-let employee = employees.find(e => e.id === empId);
-
-if(!employee){
-  alert("Employee not found");
-  location.href = "index.html";
-}
-
-// ✅ Show info
-empInfo.innerHTML = `
-  <img src="${employee.photo}" width="80"><br>
-  <h3>${employee.name}</h3>
-  <p>ID: ${employee.id}</p>
-  <p>Per Day Salary: ₹${employee.salary}</p>
-`;
-
-// ✅ Attendance
-let attendance = JSON.parse(localStorage.getItem("attendance_"+employee.id) || "[]");
-let performance = JSON.parse(localStorage.getItem("performance_"+employee.id) || "[]");
-
-function markAttendance(){
-  let today = new Date().toLocaleDateString();
-  attendance.push({date:today,status:"Present"});
-  localStorage.setItem("attendance_"+employee.id, JSON.stringify(attendance));
-  showAttendance();
-}
-
-function showAttendance(){
-  attList.innerHTML = attendance.map(a=>`${a.date} - ${a.status}`).join("<br>");
-}
-showAttendance();
-
-// ✅ Performance
-function submitWork(){
-  if(work.value.trim()===""){
-    alert("Enter work details");
-    return;
+  // ✅ Demo employees
+  if(!localStorage.getItem("employees")){
+    localStorage.setItem("employees", JSON.stringify([
+      { id:"101", name:"Rahul Kumar", salary:500, photo:"https://cdn-icons-png.flaticon.com/512/3135/3135715.png" },
+      { id:"102", name:"Nikhil Prajapati", salary:600, photo:"https://cdn-icons-png.flaticon.com/512/149/149071.png" },
+      { id:"103", name:"Anand Shukla", salary:700, photo:"https://cdn-icons-png.flaticon.com/512/4140/4140046.png" }
+    ]));
   }
-  performance.push({
-    date:new Date().toLocaleDateString(),
-    work:work.value
-  });
-  localStorage.setItem("performance_"+employee.id, JSON.stringify(performance));
-  work.value="";
+
+  let employees = JSON.parse(localStorage.getItem("employees"));
+
+  // ✅ Login
+  let empId = prompt("Enter your Employee ID (e.g., 101)");
+  let employee = employees.find(e => e.id === empId);
+
+  if(!employee){
+    alert("Employee not found!");
+    location.reload();
+  }
+
+  // ✅ Show employee info
+  empInfo.innerHTML = `
+    <img src="${employee.photo}" width="80"><br>
+    <h3>${employee.name}</h3>
+    <p>ID: ${employee.id}</p>
+    <p>Per Day Salary: ₹${employee.salary}</p>
+  `;
+
+  // ✅ Load attendance & performance
+  let attendance = JSON.parse(localStorage.getItem("attendance_"+employee.id) || "[]");
+  let performance = JSON.parse(localStorage.getItem("performance_"+employee.id) || "[]");
+
+  // ✅ Attendance functions
+  function markAttendance(){
+    let today = new Date().toLocaleDateString();
+    if(attendance.find(a => a.date === today)){
+      alert("Attendance already marked today!");
+      return;
+    }
+    attendance.push({date:today,status:"Present"});
+    localStorage.setItem("attendance_"+employee.id, JSON.stringify(attendance));
+    showAttendance();
+  }
+
+  function showAttendance(){
+    if(attendance.length === 0){
+      attList.innerHTML = "No attendance records yet.";
+      return;
+    }
+    attList.innerHTML = `
+      <table>
+        <tr><th>Date</th><th>Status</th></tr>
+        ${attendance.map(a => `<tr><td>${a.date}</td><td>${a.status}</td></tr>`).join("")}
+      </table>
+    `;
+  }
+  showAttendance();
+
+  // ✅ Performance functions
+  function submitWork(){
+    if(work.value.trim()===""){
+      alert("Enter work details");
+      return;
+    }
+    performance.push({
+      date:new Date().toLocaleDateString(),
+      work:work.value
+    });
+    localStorage.setItem("performance_"+employee.id, JSON.stringify(performance));
+    work.value="";
+    showPerformance();
+  }
+
+  function showPerformance(){
+    if(performance.length === 0){
+      perfList.innerHTML = "No work submitted yet.";
+      return;
+    }
+    perfList.innerHTML = `
+      <table>
+        <tr><th>Date</th><th>Work</th></tr>
+        ${performance.map(p => `<tr><td>${p.date}</td><td>${p.work}</td></tr>`).join("")}
+      </table>
+    `;
+  }
   showPerformance();
-}
 
-function showPerformance(){
-  perfList.innerHTML = performance.map(p=>`${p.date} - ${p.work}`).join("<br>");
-}
-showPerformance();
-
-// ✅ Salary
-function calculateSalary(){
-  let total = attendance.length * employee.salary;
-  salary.innerHTML = `Total Days: ${attendance.length}<br>Total Salary: ₹${total}`;
-}
+  // ✅ Salary
+  function calculateSalary(){
+    let total = attendance.length * employee.salary;
+    salary.innerHTML = `Total Days: ${attendance.length}<br>Total Salary: ₹${total}`;
+  }
 </script>
 
 </body>

@@ -2,7 +2,50 @@
 <html>
 <head>
 <title>Owner Panel</title>
-<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  h2 { color: #333; }
+  .section {
+    background: #fff;
+    padding: 15px 20px;
+    margin: 10px 0;
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  input, button {
+    padding: 8px;
+    margin: 5px 0;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover { background-color: #45a049; }
+  .empItem {
+    border:1px solid #ccc;
+    margin:5px 0;
+    padding:5px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    border-radius: 5px;
+  }
+  .empItem img { border-radius: 50%; margin-right:10px; }
+  .empInfo { display:flex; align-items:center; }
+</style>
 </head>
 <body>
 
@@ -12,7 +55,7 @@
   <h3>Add Employee</h3>
   <input id="empId" placeholder="Employee ID">
   <input id="empName" placeholder="Employee Name">
-  <input id="empPhoto" type="file">  <!-- Photo upload -->
+  <input id="empPhoto" type="file">
   <input id="empSalary" type="number" placeholder="Per day salary">
   <button onclick="addEmployee()">Add Employee</button>
 </div>
@@ -37,6 +80,12 @@ function addEmployee(){
     return;
   }
 
+  // Duplicate ID check
+  if(employees.find(e => e.id === id)){
+    alert("Employee ID already exists!");
+    return;
+  }
+
   let reader = new FileReader();
   reader.onload = function(e){
     let photoData = e.target.result; // Base64 string
@@ -54,14 +103,30 @@ function addEmployee(){
   reader.readAsDataURL(photoFile);
 }
 
+// Delete employee
+function deleteEmployee(empId){
+  if(confirm("Are you sure to delete this employee?")){
+    employees = employees.filter(e => e.id !== empId);
+    localStorage.setItem("employees", JSON.stringify(employees));
+    showEmployees();
+  }
+}
+
 // Show employee list
 function showEmployees(){
+  if(employees.length === 0){
+    empList.innerHTML = "No employees added yet.";
+    return;
+  }
   empList.innerHTML = employees.map(e =>
-    `<div style="border:1px solid white; margin:5px; padding:5px; display:flex; align-items:center;">
-       <img src="${e.photo}" width="50" height="50" style="margin-right:10px;"> 
-       <div>
-         <b>${e.name}</b> (ID: ${e.id}) <br> ₹${e.salary}/day
+    `<div class="empItem">
+       <div class="empInfo">
+         <img src="${e.photo}" width="50" height="50"> 
+         <div>
+           <b>${e.name}</b> (ID: ${e.id}) <br> ₹${e.salary}/day
+         </div>
        </div>
+       <button onclick="deleteEmployee('${e.id}')">Delete</button>
      </div>`).join("");
 }
 

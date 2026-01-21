@@ -1,32 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FELICITY RUDRAxGARG EMS Login</title>
 <style>
-/* Body style */
+/* ===== Animated Gradient Background ===== */
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    height: 100vh;
+    margin: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    background: linear-gradient(-45deg, #1e3c72, #2a5298, #6a11cb, #2575fc);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
 }
 
-/* Login box */
+/* ===== Floating Login Box ===== */
 .box {
-    background: #fff;
+    background: rgba(255,255,255,0.95);
     padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     text-align: center;
     width: 360px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    transform: translateY(0px);
+    animation: floatBox 3s ease-in-out infinite;
 }
 
-/* Company header */
+@keyframes floatBox {
+    0%, 100% { transform: translateY(0px);}
+    50% { transform: translateY(-10px);}
+}
+
+/* ===== Company Header ===== */
 .company-header {
     display: flex;
     flex-direction: column;
@@ -35,23 +52,26 @@ body {
 }
 
 .company-header img {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     margin-bottom: 10px;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .company-header h2 {
     color: #1e3c72;
-    font-size: 22px;
-    text-shadow: 1px 1px 2px #ccc;
+    font-size: 24px;
+    text-shadow: 1px 1px 3px #ccc;
+    margin: 0;
 }
 
-/* Inputs */
+/* ===== Inputs ===== */
 input {
     width: 100%;
-    padding: 12px 15px;
-    margin: 10px 0;
-    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    border-radius: 10px;
     border: 1px solid #ccc;
     outline: none;
     font-size: 16px;
@@ -60,52 +80,61 @@ input {
 
 input:focus {
     border-color: #1e3c72;
-    box-shadow: 0 0 8px rgba(30,60,114,0.3);
+    box-shadow: 0 0 12px rgba(30,60,114,0.4);
 }
 
-/* Button */
+/* ===== Login Button ===== */
 button {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     margin-top: 15px;
     border: none;
-    border-radius: 8px;
-    background-color: #1e3c72;
-    color: white;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #1e3c72, #3a5fbd);
+    color: #fff;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 button:hover {
-    background-color: #3a5fbd;
+    background: linear-gradient(90deg, #3a5fbd, #1e3c72);
     transform: scale(1.05);
 }
 
-/* Info paragraph */
-p {
-    margin-top: 20px;
-    color: #555;
-    font-size: 14px;
-}
-
-/* AI Button */
+/* ===== AI Assistant Button ===== */
 .ai-btn{
     display:inline-block;
     padding:14px 25px;
     background:#1e3c72;
     color:white;
     text-decoration:none;
-    border-radius:30px;
+    border-radius:50px;
     font-weight:bold;
-    box-shadow:0 0 15px rgba(0,0,0,0.3);
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
     transition:0.3s;
     margin-top:10px;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
 }
 
 .ai-btn:hover{
     background:#3a5fbd;
-    transform:scale(1.05);
+    transform: scale(1.1);
+}
+
+/* ===== Responsive ===== */
+@media(max-width: 420px){
+    .box{
+        width: 90%;
+        padding: 30px 20px;
+    }
+    .company-header img{
+        width: 80px;
+        height: 80px;
+    }
 }
 </style>
 </head>
@@ -120,32 +149,33 @@ p {
 
   <!-- Login Inputs -->
   <input id="user" placeholder="ID">
-  <input id="pass" placeholder="Password">
+  <input id="pass" type="password" placeholder="Password">
 
   <button onclick="login()">Login</button>
 </div>
 
-<!-- AI Assistant Button -->
-<a href="assistant.html" class="ai-btn">
+<!-- AI Assistant Floating Button -->
+<a href="assistant.html" class="ai-btn" target="_blank">
 🤖 Open Company AI Assistant
 </a>
 
 <script>
-function login(){
- let u = user.value;
- let p = pass.value;
+// ===== Login Logic =====
+let credentials = {
+  "ANAND": {password:"123", role:"owner"},
+  "emp": {password:"123", role:"emp"}
+};
 
- if(u=="ANAND" && p=="123"){
-   localStorage.setItem("role","owner");
-   location="owner.html";
- }
- else if(u=="emp" && p=="123"){
-   localStorage.setItem("role","emp");
-   location="employee.html";
- }
- else{
-   alert("Wrong login");
- }
+function login(){
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if(credentials[u] && credentials[u].password === p){
+    localStorage.setItem("role", credentials[u].role);
+    location = credentials[u].role + ".html";
+  } else {
+    alert("Wrong login credentials!");
+  }
 }
 </script>
 

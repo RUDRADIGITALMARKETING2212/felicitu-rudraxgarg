@@ -162,8 +162,8 @@ button:hover {
 <script>
 // ===== Login Logic =====
 let credentials = {
-  "ANAND": {password:"123", role:"owner"},
-  "emp": {password:"123", role:"emp"}
+  "ANAND": {password:"123", file:"owner.html"},
+  "emp": {password:"123", file:"employee.html"}
 };
 
 function login(){
@@ -171,13 +171,11 @@ function login(){
   let p = document.getElementById("pass").value;
 
   if(credentials[u] && credentials[u].password === p){
-    localStorage.setItem("role", credentials[u].role);
-    location = credentials[u].role + ".html";
+    location = credentials[u].file;
   } else {
     alert("Wrong login credentials!");
   }
 }
 </script>
-
 </body>
 </html>
